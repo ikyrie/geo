@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geo/map_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LocationPage extends StatelessWidget {
   const LocationPage({super.key});
@@ -26,9 +27,31 @@ class LocationPage extends StatelessWidget {
                   "Para o GPS funcionar corretamente, vamos precisar da localização do seu dispositivo."),
               SizedBox(height: 26),
               InkWell(
-                onTap: () {
+                onTap: () async {
+                  await Permission.location.request();
+
+                  var locationStatus = await Permission.location.status;
+                  if (locationStatus.isGranted) {
                     Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MapPage()));
+                        MaterialPageRoute(builder: (context) => MapPage()));
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text("Permissão de localização"),
+                        content: Text(
+                            "É necessário aceitar a permissão de localização para o app funcionar corretamente."),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Ok"),
+                          )
+                        ],
+                      ),
+                    );
+                  }
                 },
                 borderRadius: BorderRadius.circular(30),
                 child: Ink(
