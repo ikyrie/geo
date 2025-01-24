@@ -17,7 +17,12 @@ class _MapPage extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: GoogleMap(initialCameraPosition: cameraPosition),
+        child: GoogleMap(
+          mapType: MapType.normal,
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+          initialCameraPosition: cameraPosition,
+        ),
       ),
     );
   }
