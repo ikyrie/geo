@@ -38,6 +38,14 @@ class _MapPage extends State<MapPage> {
               mapType: MapType.normal,
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
+              markers: <Marker>{
+                Marker(
+                  markerId: MarkerId("1"),
+                  position: LatLng(-23.563308, -46.632748),
+                  infoWindow: InfoWindow(
+                      title: "Depósito 1", snippet: "Depósito de peixes"),
+                ),
+              },
               initialCameraPosition: cameraPosition,
               onMapCreated: (GoogleMapController controller) =>
                   _controller.complete(controller),
