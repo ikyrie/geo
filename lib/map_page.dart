@@ -31,19 +31,37 @@ class _MapPage extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: GoogleMap(
-          mapType: MapType.normal,
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
-          initialCameraPosition: cameraPosition,
-          onMapCreated: (GoogleMapController controller) => _controller.complete(controller),
+        child: Stack(
+          alignment: Alignment.bottomLeft,
+          children: <Widget>[
+            GoogleMap(
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,
+              initialCameraPosition: cameraPosition,
+              onMapCreated: (GoogleMapController controller) =>
+                  _controller.complete(controller),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 60),
+              child: InkWell(
+                onTap: () async {
+                  await _goToUserLocation();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: kElevationToShadow[3],
+                    color: Color(0xFF4D5BD9),
+                  ),
+                  height: 56,
+                  width: 56,
+                  child: Icon(Icons.my_location, color: Colors.white,),
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.location_on),
-        onPressed: () async {
-          await _goToUserLocation();
-        },
       ),
     );
   }
