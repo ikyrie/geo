@@ -18,6 +18,27 @@ class _MapPage extends State<MapPage> {
     target: LatLng(-23.563308, -46.632748),
   );
 
+  final Set<Marker> _markers = {
+    Marker(
+      markerId: MarkerId("1"),
+      position: LatLng(-23.303365, -51.162312),
+      infoWindow:
+          InfoWindow(title: "Depósito 1", snippet: "Depósito de peixes"),
+    ),
+    Marker(
+      markerId: MarkerId("2"),
+      position: LatLng(-23.296617, -51.174109),
+      infoWindow:
+          InfoWindow(title: "Depósito 2", snippet: "Depósito de frutas"),
+    ),
+    Marker(
+      markerId: MarkerId("3"),
+      position: LatLng(-23.264221, -51.175516),
+      infoWindow:
+          InfoWindow(title: "Depósito 3", snippet: "Depósito de caminhões"),
+    ),
+  };
+
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
 
   Future<void> _goToUserLocation() async {
@@ -38,14 +59,7 @@ class _MapPage extends State<MapPage> {
               mapType: MapType.normal,
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
-              markers: <Marker>{
-                Marker(
-                  markerId: MarkerId("1"),
-                  position: LatLng(-23.563308, -46.632748),
-                  infoWindow: InfoWindow(
-                      title: "Depósito 1", snippet: "Depósito de peixes"),
-                ),
-              },
+              markers: _markers,
               initialCameraPosition: cameraPosition,
               onMapCreated: (GoogleMapController controller) =>
                   _controller.complete(controller),
