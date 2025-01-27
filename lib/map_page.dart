@@ -48,6 +48,72 @@ class _MapPage extends State<MapPage> {
     await controller.animateCamera(CameraUpdate.newLatLngZoom(LatLng(location.latitude, location.longitude), 15));
   }
 
+  void createMarker(LatLng position) {
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController snippetController = TextEditingController();
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => Padding(
+        padding: EdgeInsets.fromLTRB(16, 26, 16, MediaQuery.of(context).viewInsets.bottom + 36),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                labelText: 'Nome do marcador',
+              ),
+            ),
+            SizedBox(height: 16,),
+            TextField(
+              controller: snippetController,
+              decoration: const InputDecoration(
+                labelText: 'Descrição',
+              ),
+            ),
+            SizedBox(height: 26,),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _markers.add(
+                    Marker(
+                      markerId:
+                          MarkerId("${position.latitude}, ${position.longitude}"),
+                      position: position,
+                      infoWindow: InfoWindow(
+                        title: titleController.text,
+                        snippet: snippetController.text,
+                      ),
+                    ),
+                  );
+                });
+              },
+              borderRadius: BorderRadius.circular(30),
+              child: Ink(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Color(0xFF4D5BD9),
+                ),
+                child: Text(
+                  "Adicionar",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +126,7 @@ class _MapPage extends State<MapPage> {
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
               markers: _markers,
+              onLongPress: (LatLng position) => createMarker(position),
               initialCameraPosition: cameraPosition,
               onMapCreated: (GoogleMapController controller) =>
                   _controller.complete(controller),
