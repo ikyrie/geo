@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geo/location_service.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,6 +18,15 @@ class _MapPage extends State<MapPage> {
     target: LatLng(-23.563308, -46.632748),
   );
 
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
+
+  Future<void> _goToUserLocation() async {
+    final location = await _locationService.getCurrentPosition();
+
+    final GoogleMapController controller = await _controller.future;
+    await controller.animateCamera(CameraUpdate.newLatLngZoom(LatLng(location.latitude, location.longitude), 15));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,13 +36,13 @@ class _MapPage extends State<MapPage> {
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
           initialCameraPosition: cameraPosition,
+          onMapCreated: (GoogleMapController controller) => _controller.complete(controller),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.location_on),
         onPressed: () async {
-          Position position = await _locationService.getCurrentPosition();
-          print(position);
+          await _goToUserLocation();
         },
       ),
     );
